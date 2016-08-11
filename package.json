@@ -1,0 +1,29 @@
+{
+  "name": "protoapp",
+  "version": "0.0.1",
+  "description": "Generate SPA from ProtoBuf",
+  "main": "index.js",
+  "bin": {
+    "protoapp": "./bin/protoapp"
+  },
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "tsc": "tsc",
+    "pbjs": "pbjs",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "goodmind <andwebar@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^2.1.0-dev.20160810"
+  },
+  "dependencies": {
+    "@types/node": "^6.0.32",
+    "dustjs-helpers": "^1.7.3",
+    "dustjs-linkedin": "^2.7.3",
+    "protobufjs": "^5.0.1",
+    "yargs": "^4.8.1"
+  }
+}

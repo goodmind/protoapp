@@ -1,0 +1,5 @@
+.idea/
+dist/
+examples/
+node_modules/
+*.js

@@ -1,0 +1,33 @@
+export interface ProtobufServiceRpc {
+  request: string
+  response: string
+  options: { [s: string]: string }
+}
+
+export interface ProtobufService {
+  name: string
+  options: any
+  rpc: { [s: string]: ProtobufServiceRpc }
+}
+
+export interface ProtobufMessage extends ProtobufNode {
+  name: string
+  _parent: ProtobufNode
+}
+
+export interface ProtobufRoot extends ProtobufNode {
+  package: string
+}
+
+export interface ProtobufNode {
+  fields: {
+    rule: string
+    type: string
+    name: string
+    id: string
+    oneof?: string
+  }[]
+  messages: ProtobufMessage[]
+  services: ProtobufService[]
+}
+

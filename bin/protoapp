@@ -1,0 +1,17 @@
+#!/usr/bin/env node
+'use strict';
+
+process.title = 'protoapp';
+
+var argv = require('yargs')
+	.usage('Convert a ProtoBuf.js JSON description in SPA.\nUsage: $0')
+    .demand('f')
+    .alias('f', 'file')
+    .describe('f', 'A Protobuf JSON description (file)')
+    .alias('p', 'preset')
+    .describe('p', 'Preset (a plugin) to load and use')
+    .argv;
+
+require('../src/cli/protoapp.js').main(argv)
+
+
