@@ -6,8 +6,8 @@ import { ProtobufServiceRpc, ProtobufService } from '../../interfaces'
 function generateRpc (model: ProtobufServiceRpc): ProtobufServiceRpc {
   let options: { [s: string]: string } = {}
   for (let opt in model.options) {
-    let keys = opt.split('.'),
-      key = keys[keys.length - 1]
+    let keys = opt.split('.')
+    let key = keys[keys.length - 1]
 
     options[key] = model.options[opt]
   }
@@ -38,17 +38,17 @@ export function generateService (model: ProtobufService, namespace: string[]): P
     newModel.rpc[m] = generateRpc(newModel.rpc[m])
   }
 
-  console.log(newModel.name, newModel.imports, namespace)
-
   return new Promise((resolve, reject) => {
     dust.render('service', newModel, (err, out) => {
       if (err != null) {
         reject(err)
-      }
-      else {
+      } else {
         resolve({
-          filename: newModel.name + '.ts',
-          body: out
+          type: 'service',
+          files: [{
+            filename: `${newModel.name.toLowerCase()}.service.ts`,
+            body: out
+          }]
         })
       }
     })
