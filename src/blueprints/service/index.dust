@@ -9,7 +9,7 @@ export default class {name} {
 {@each key=rpc}
     {$key|firstLetterInLowerCase|camelCase}(request: {$value.request}): Observable<{$value.response}> {
         {#$value.options}
-        return this.http.post('{post}', request.{body})
+        return this.http.post(`{@template str=post ctx="request" /}`, request.{body})
             .map(res => res.json())
         {/$value.options}
     };
