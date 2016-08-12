@@ -7,6 +7,7 @@
 > Generate SPA from ProtoBuf.js
 
 Generate Angular/React application from Google's [Protobuf](https://github.com/google/protobuf)
+
 Just convert `.proto` to `.json` with [protobuf.js](https://github.com/dcodeIO/protobuf.js)
 
 ## Install
