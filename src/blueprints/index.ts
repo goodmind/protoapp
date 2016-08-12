@@ -1,16 +1,17 @@
 import dust = require('dustjs-helpers')
-import fs = require('fs')
+import * as fs from 'fs'
+import * as path from 'path'
 
 dust.config.whitespace = true
 
 dust.filters['convertType'] = (value: string) => {
   switch (value.toLowerCase()) {
     case 'string':
-      return 'string';
+      return 'string'
     case 'bool':
-      return 'boolean';
+      return 'boolean'
     case 'bytes':
-      return 'ByteBuffer';
+      return 'ByteBuffer'
     case 'double':
     case 'float':
     case 'int32':
@@ -23,19 +24,18 @@ dust.filters['convertType'] = (value: string) => {
     case 'sint64':
     case 'fixed64':
     case 'sfixed64':
-      return 'number';
+      return 'number'
   }
 
-  // By default, it's a message identifier
-  return value;
+  return value
 }
 
-dust.filters['firstLetterInLowerCase'] = (value: string)=> {
+dust.filters['firstLetterInLowerCase'] = (value: string) => {
   return value.charAt(0).toLowerCase() + value.slice(1)
 }
 
 dust.filters['camelCase'] = (value: string) => {
-  return value.replace(/(_[a-zA-Z])/g, (match)=> match[1].toUpperCase())
+  return value.replace(/(_[a-zA-Z])/g, (match) => match[1].toUpperCase())
 }
 
 dust.helpers['each'] = (chunk, context, bodies, params) => {
@@ -51,8 +51,8 @@ dust.helpers['each'] = (chunk, context, bodies, params) => {
 }
 
 export function loadDustTemplate (name: string): void {
-  var template = fs.readFileSync(`${__dirname}/${name}/index.dust`, "UTF8").toString(),
-    compiledTemplate = dust.compile(template, name)
+  let template = fs.readFileSync(path.join(__dirname, name, 'index.dust'), 'UTF8').toString()
+  let compiledTemplate = dust.compile(template, name)
 
   dust.loadSource(compiledTemplate)
 }
