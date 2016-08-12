@@ -31,3 +31,12 @@ export interface ProtobufNode {
   services: ProtobufService[]
 }
 
+export interface File {
+  filename: string
+  body: string
+}
+
+export interface Entity {
+  type: string
+  files: File[]
+}
