@@ -16,17 +16,17 @@ export function generateInterface (model: ProtobufMessage, namespace: string[]) 
     imports: generateImports(model, primitiveTypes)
   })
 
-  console.log(newModel.name, newModel.imports, namespace)
-
   return new Promise((resolve, reject) => {
     dust.render('interface', newModel, (err, out) => {
       if (err != null) {
         reject(err)
-      }
-      else {
+      } else {
         resolve({
-          filename: newModel.name + '.ts',
-          body: out
+          type: 'interface',
+          files: [{
+            filename: `${newModel.name}.ts`,
+            body: out
+          }]
         })
       }
     })
