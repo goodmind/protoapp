@@ -10,8 +10,12 @@ var argv = require('yargs')
     .describe('f', 'A Protobuf JSON description (file)')
     .alias('p', 'preset')
     .describe('p', 'Preset (a plugin) to load and use')
+		.default('p', 'angular')
+		.alias('o', 'out')
+		.describe('o', 'Output directory')
+		.default('o', '.')
     .argv;
 
-require('../src/cli/protoapp.js').main(argv)
+require('../src/cli/protoapp.js').main(argv, process.cwd())
 
 
