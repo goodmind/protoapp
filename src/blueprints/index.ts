@@ -38,6 +38,11 @@ dust.filters['camelCase'] = (value: string) => {
   return value.replace(/(_[a-zA-Z])/g, (match) => match[1].toUpperCase())
 }
 
+dust.helpers['template'] = (chunk, context, bodies, {str = '', ctx = ''} = {str: '', ctx: ''}) => {
+  console.log(context, str, ctx)
+  return chunk.write(str.replace(/{/g, '${' + ctx + '.'))
+}
+
 dust.helpers['each'] = (chunk, context, bodies, params) => {
   let obj = params.key
   for (let k in obj) {
