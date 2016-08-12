@@ -1,22 +1,30 @@
 import { generateService } from '../blueprints/service'
 import { generateInterface } from '../blueprints/interface'
-import { ProtobufRoot, ProtobufMessage, ProtobufNode } from '../interfaces'
+import { Entity, ProtobufRoot, ProtobufMessage, ProtobufNode } from '../interfaces'
 
+import * as mkdirp from 'mkdirp'
 import * as path from 'path'
 import * as fs from 'fs'
 
 function writeFile (filename: string, data: any): Promise<any> {
   return new Promise((resolve, reject) => {
     fs.writeFile(filename, data, 'UTF-8', (err) => {
-      if (err) reject(err)
-      else resolve(data)
+      if (err) { reject(err) } else { resolve(data) }
+    })
+  })
+}
+
+function createDirectory (path: string): Promise<any> {
+  return new Promise((resolve, reject) => {
+    mkdirp(path, (err, made) => {
+      if (err) { reject(err) } else { resolve(made) }
     })
   })
 }
 
 interface AST {
   namespaces: string[]
-  body: Promise<string>[]
+  body: Promise<Entity>[]
 }
 
 function isProtobufMessage (node: ProtobufNode): node is ProtobufMessage {
@@ -62,18 +70,30 @@ function transformer (ast: ProtobufRoot): AST {
   return acc
 }
 
-function codeGenerator (newAst: AST): Promise<any> {
+function codeGenerator (newAst: AST): Promise<Entity[]> {
   return Promise.all(newAst.body)
 }
 
-function compiler (ast: ProtobufRoot): Promise<any> {
+function compiler (ast: ProtobufRoot): Promise<Entity[]> {
   let newAst: AST = transformer(ast)
   let output = codeGenerator(newAst)
 
   return output
 }
 
-export function main (argv: any) {
+function createEntity (entity: Entity, relativeDir: string): any {
+  let obj = {
+    title: `installing ${entity.type}`
+  }
+
+  let files = entity.files.map(v => writeFile(path.join(relativeDir, v.filename), v.body).then(() => v))
+
+  return Promise.all(files).then(files => {
+    return Object.assign({}, obj, { files: files.map(v => `  create ${path.join(relativeDir, v.filename)}`) })
+  })
+}
+
+export function main (argv: any, currentDir: string) {
   let ast: ProtobufRoot
   try {
     ast = JSON.parse(fs.readFileSync(argv.file).toString())
@@ -81,10 +101,12 @@ export function main (argv: any) {
     throw 'Invalid file'
   }
 
+  let relativeDir = path.join(currentDir, argv.out)
+
   compiler(ast)
-    .then((x: any[]) =>
-      x.map(v =>
-        writeFile(path.join(__dirname, '../../dist', v.filename), v.body)))
-    .then((x: Promise<string>[]) => Promise.all(x))
-    .then((x: string[]) => x.forEach(x => console.log(x)))
+    .then((x: Entity[]) => createDirectory(relativeDir).then(() => x))
+    .then((entities: Entity[]) => entities.map(v => createEntity(v, relativeDir)))
+    .then((x) => Promise.all(x))
+    .then(x => x.map(action => console.log(`${action.title}\n${action.files.join('')}`)))
+    .catch((err) => console.error(err))
 }
