@@ -1,7 +1,7 @@
 export interface ProtobufServiceRpc {
   request: string
   response: string
-  options: { [s: string]: string }
+  options: { [s: string]: any }
 }
 
 export interface ProtobufService {
