@@ -80,6 +80,8 @@ declare module "dustjs-helpers" {
      * Returns the head of the context stack.
      */
     current(): any;
+
+    stack: any
   }
 
   export interface Stream {
