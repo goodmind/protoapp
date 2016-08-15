@@ -34,12 +34,21 @@ dust.filters['firstLetterInLowerCase'] = (value: string) => {
   return value.charAt(0).toLowerCase() + value.slice(1)
 }
 
+export function hyphenCase (value: string) {
+  return value.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()
+}
+
+dust.filters['hyphenCase'] = hyphenCase
+
 dust.filters['camelCase'] = (value: string) => {
   return value.replace(/(_[a-zA-Z])/g, (match) => match[1].toUpperCase())
 }
 
+dust.helpers['query'] = (chunk, context, bodies, params) => {
+  return chunk.render(bodies.block, context.push(context.stack.head[params.key]))
+}
+
 dust.helpers['template'] = (chunk, context, bodies, {str = '', ctx = ''} = {str: '', ctx: ''}) => {
-  console.log(context, str, ctx)
   return chunk.write(str.replace(/{/g, '${' + ctx + '.'))
 }
 
@@ -55,11 +64,34 @@ dust.helpers['each'] = (chunk, context, bodies, params) => {
   }
 }
 
-export function loadDustTemplate (name: string): void {
-  let template = fs.readFileSync(path.join(__dirname, name, 'index.dust'), 'UTF8').toString()
-  let compiledTemplate = dust.compile(template, name)
+export function loadDustTemplate (name: string, file: string = 'index', dirname: string = __dirname): void {
+  let template = fs.readFileSync(path.join(dirname, name, `${file}.dust`), 'UTF8').toString()
+  let compiledTemplate = dust.compile(template, file === 'index' ? name : `${name}.${file}`)
 
   dust.loadSource(compiledTemplate)
+}
+
+export function renderDustTemplate (name: string, model: any): Promise<any> {
+  return new Promise((resolve, reject) => {
+    dust.render(name, model, (err, out) => {
+      if (err) {
+        reject(err)
+      } else {
+        resolve(out)
+      }
+    })
+  })
+}
+
+export function dustTemplate (name: string, model: any): Promise<any> {
+  let names = name.split('.')
+  let namespace = names[0]
+  names.shift()
+
+  let file = names.join('.')
+
+  loadDustTemplate(namespace, file || 'index', this.dirname)
+  return renderDustTemplate(name, model)
 }
 
 export const primitiveTypes: string[] = [
