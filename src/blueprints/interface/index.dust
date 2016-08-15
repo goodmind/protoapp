@@ -1,9 +1,0 @@
-{#imports}
-import {.} from './{.}'
-{/imports}
-
-export interface {name} {
-{#fields}
-    {name}{@eq key=rule value="optional"}?{/eq}: {type|convertType}{@eq key=rule value="repeated"}[]{/eq};
-{/fields}
-}
