@@ -1,14 +1,23 @@
 {
   "compilerOptions": {
+    "removeComments": false,
+    "preserveConstEnums": true,
+    "declaration": true,
+    "sourceMap": true,
+    "noImplicitThis": true,
+    "noImplicitReturns": true,
+    "noImplicitAny": true,
+    "suppressImplicitAnyIndexErrors": true,
     "module": "commonjs",
     "target": "es5",
-    "lib": ["es6", "es2017.object"],
-    "noImplicitAny": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "lib": ["es6", "es2017.object"]
   },
+  "files": [
+    "index.ts"
+  ],
   "include": [
     "custom-typings/**/*",
-    "src/**/*"
+    "src/**/*.ts",
+    "test/**/*.ts"
   ]
 }
