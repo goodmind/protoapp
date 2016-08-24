@@ -6,4 +6,5 @@ coverage/
 lcov.info
 *.js
 *.map
+test/*.d.ts
 npm-debug.log
