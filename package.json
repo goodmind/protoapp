@@ -17,7 +17,7 @@
     "prebuild": "npm run lint",
     "build": "tsc",
     "lint": "tslint 'src/**/*.ts' --exclude 'src/**/*.d.ts'",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node test/ | tap-spec",
     "cover": "istanbul cover test/index.js --report none && remap-istanbul -i coverage/coverage.json -o coverage/html-report -t html",
     "prepublish": "npm run build",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
@@ -32,9 +32,9 @@
   "devDependencies": {
     "@types/tape": "^4.2.27",
     "istanbul": "^0.4.4",
-    "protoapp-plugin-angular": "0.0.0-placeholder",
     "remap-istanbul": "^0.6.4",
     "semantic-release": "^6.3.0",
+    "tap-spec": "^4.1.1",
     "tape": "^4.6.0",
     "tslint": "^3.14.0-dev.1",
     "tslint-config-standard": "^1.3.0",
