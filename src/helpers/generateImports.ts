@@ -1,5 +1,5 @@
 import { ProtobufService, ProtobufMessage } from '../interfaces'
-import { flatten } from './utils'
+import { flatten2D } from './utils'
 
 export function generateImportsMessage (model: ProtobufMessage, primitives: string[]): string[] {
   return model.fields
@@ -13,7 +13,7 @@ export function generateImportsService (model: ProtobufService, primitives: stri
   let refs = Object.keys(rpc)
     .map(x => [rpc[x].request, rpc[x].response])
 
-  let types = flatten(refs)
+  let types = flatten2D(refs)
     .filter((x: any) => primitives.indexOf(x) < 0)
     .filter((x: any) => x !== model.name)
 
