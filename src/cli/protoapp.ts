@@ -1,9 +1,13 @@
 import { Entity, ProtobufRoot } from '../interfaces'
-import { flatten, createDirectory, writeFile } from '../helpers/utils'
+import { flatten2D, createDirectory, writeFile } from '../helpers/utils'
 import File from '../transformation/file'
 
 import * as path from 'path'
 import * as fs from 'fs'
+
+function flatEntities (x: any[][]): Entity[][] {
+  return x.map((y: any) => flatten2D(y))
+}
 
 function createEntity (entity: Entity, relativeDir: string): any {
   let obj = {
@@ -29,9 +33,10 @@ export function main (argv: any, currentDir: string) {
   let relativeDir = path.join(currentDir, argv.out)
   let file = new File({ plugin: argv.plugin, dirname: relativeDir })
   file.addAst(ast)
-  file.transform()
-    .then((x: Entity[]) => createDirectory(relativeDir).then(() => x))
-    .then((entities: Entity[]) => flatten(entities).map(v => createEntity(v, relativeDir)))
+  file.transform<Entity[]>()
+    .then(flatEntities)
+    .then((x: Entity[][]) => createDirectory(relativeDir).then(() => x))
+    .then((entities: Entity[][]) => flatten2D(entities).map(v => createEntity(v, relativeDir)))
     .then((x) => Promise.all(x))
     .then(x => x.map(action => console.log(`${action.title}\n${action.files.join('\n')}`)))
     .catch((err) => console.error(err))
