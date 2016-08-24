@@ -1,7 +1,7 @@
 export interface ProtobufServiceRpc {
   request: string
   response: string
-  options: { [s: string]: any }
+  options: { [s: string]: string|any }
 }
 
 export interface ProtobufService {
@@ -12,7 +12,7 @@ export interface ProtobufService {
 
 export interface ProtobufMessage extends ProtobufNode {
   name: string
-  _parent: ProtobufNode
+  _parent?: ProtobufNode
 }
 
 export interface ProtobufRoot extends ProtobufNode {
@@ -24,11 +24,11 @@ export interface ProtobufNode {
     rule: string
     type: string
     name: string
-    id: string
+    id: number
     oneof?: string
   }[]
-  messages: ProtobufMessage[]
-  services: ProtobufService[]
+  messages?: ProtobufMessage[]
+  services?: ProtobufService[]
 }
 
 export interface File {
