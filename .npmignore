@@ -1,3 +1,8 @@
 .idea/
 dist/
 examples/
+coverage/
+test/
+lcov.info
+*.map
+*.ts
