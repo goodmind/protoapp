@@ -1,14 +1,19 @@
-import {ProtobufRoot, Entity} from '../interfaces'
+import { ProtobufRoot } from '../interfaces'
 
 import { primitiveTypes, dustTemplate } from './templater'
 import { generateImportsMessage, generateImportsService } from '../helpers/generateImports'
 import { AST, default as traverse } from './traverse'
 import { normalisePlugin } from './plugin'
-import { flatten } from '../helpers/utils'
+
+let defaultVisitor = {
+  Service (): void { return },
+  Message (): void { return }
+}
 
 export default class File {
   ast: ProtobufRoot | AST
   pluginVisitor: any
+  visitor: any
 
   constructor (private opts: any = {}) {
     this.opts.plugin = normalisePlugin(this.opts.plugin, this.opts.dirname, {
@@ -17,29 +22,29 @@ export default class File {
       generateImportsMessage,
       generateImportsService,
       dustTemplate
-    })
+    }) || { visitor: this.opts.visitor }
 
     this.pluginVisitor = this.opts.plugin.visitor
+    this.visitor = this.pluginVisitor || defaultVisitor
   }
 
   addAst (ast: ProtobufRoot) {
     this.ast = ast
   }
 
-  transform (): Promise<Entity[]> {
+  transform<T> (): Promise<T[]> {
     let acc: AST = {
       namespaces: [],
       body: []
     }
 
-    traverse(acc, (this.ast as ProtobufRoot), this.pluginVisitor)
+    traverse(acc, (this.ast as ProtobufRoot), this.visitor)
     this.ast = acc
 
-    return this.generate()
+    return this.generate<T>()
   }
 
-  generate (): Promise<Entity[]> {
+  generate<T> (): Promise<T[]> {
     return Promise.all((this.ast as AST).body)
-      .then(x => x.map((y: any) => flatten(y)))
   }
 }
