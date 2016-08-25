@@ -1,6 +1,5 @@
 {
   "name": "protoapp",
-  "version": "0.0.0-placeholder",
   "description": "Generate SPA from ProtoBuf.js",
   "typings": "index.d.ts",
   "main": "index.js",
@@ -50,7 +49,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/goodmind/protoapp.git"
+    "url": "https://github.com/goodmind/protoapp.git"
   },
   "bugs": {
     "url": "https://github.com/goodmind/protoapp/issues"
